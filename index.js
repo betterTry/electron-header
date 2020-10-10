@@ -10,11 +10,12 @@ function insertHeader(win, headers) {
 		urls: ['<all_urls>'],
 		types: ['xmlhttprequest'],
 	}, (detail, cb) => {
+    let newHeaders = headers
     if (typeof headers === 'function') {
-      headers = headers(detail)
+      newHeaders = headers(detail)
     }
-    const {requestHeaders} = detail;
-    const _headers = Object.assign({}, requestHeaders, headers);
+    const { requestHeaders } = detail;
+    const _headers = Object.assign({}, requestHeaders, newHeaders);
 
 		cb({requestHeaders: _headers});
 	});
@@ -22,7 +23,7 @@ function insertHeader(win, headers) {
 
 module.exports = function (headers, win) {
   if (!headers || Object.prototype.toString.call(headers) !== '[object Object]'
-               || Object.prototype.toString.call(headers) !== '[object Function]') {
+               && Object.prototype.toString.call(headers) !== '[object Function]') {
     return new TypeError('Expected an Object Or Function');
   }
   if (win) {
@@ -36,3 +37,4 @@ module.exports = function (headers, win) {
 		insertHeader(win, headers);
 	});
 }
+
